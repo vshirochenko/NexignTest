@@ -21,6 +21,8 @@ public sealed class Game
 
     public void Join(Guid opponentId)
     {
+        if (opponentId == CreatorId)
+            throw new InvalidOperationException("You are creator! Wait for another player :)");
         if (IsGameLobbyFull())
             throw new InvalidOperationException("Game lobby is full! Try another lobby :)");
         OpponentId = opponentId;
