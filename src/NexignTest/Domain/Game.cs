@@ -29,6 +29,6 @@ public sealed class Game
     }
     
     [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
-    private bool IsGameLobbyFull() 
+    public bool IsGameLobbyFull() 
         => OpponentId is not null;
 }

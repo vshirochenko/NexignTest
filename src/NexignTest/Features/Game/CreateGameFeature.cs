@@ -6,12 +6,12 @@ internal static class CreateGameFeature
 {
     public static async Task<IResult> Execute(
         CreateGameRequest req,
-        AppDbContext ctx,
+        IGameRepository gameRepository,
         CancellationToken stoppingToken)
     {
         var newGameId = Guid.NewGuid();
-        ctx.Games.Add(new DbGame(newGameId, req.CreatorId));
-        await ctx.SaveChangesAsync(stoppingToken);
+        var game = Domain.Game.Create(newGameId, req.CreatorId);
+        await gameRepository.Save(game, stoppingToken);
         return Results.Created($"/api/users/{newGameId}", new CreateGameResponse(newGameId));
     } 
     
