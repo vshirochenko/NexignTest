@@ -2,23 +2,23 @@
 
 public static class RoundJudgement
 {
-    public static RoundWinner GetWinner(MoveKind firstMove, MoveKind secondMove)
-        => (firstMove, secondMove) switch
+    public static RoundWinner GetWinner(TurnKind firstTurn, TurnKind secondTurn)
+        => (firstTurn, secondTurn) switch
         {
             // Первый игрок показывает "камень"
-            (MoveKind.Rock, MoveKind.Rock) => RoundWinner.Draw,
-            (MoveKind.Rock, MoveKind.Scissors) => RoundWinner.FirstPlayer,
-            (MoveKind.Rock, MoveKind.Paper) => RoundWinner.SecondPlayer,
+            (TurnKind.Rock, TurnKind.Rock) => RoundWinner.Draw,
+            (TurnKind.Rock, TurnKind.Scissors) => RoundWinner.FirstPlayer,
+            (TurnKind.Rock, TurnKind.Paper) => RoundWinner.SecondPlayer,
 
             // Первый игрок показывает "ножницы"
-            (MoveKind.Scissors, MoveKind.Rock) => RoundWinner.SecondPlayer,
-            (MoveKind.Scissors, MoveKind.Scissors) => RoundWinner.Draw,
-            (MoveKind.Scissors, MoveKind.Paper) => RoundWinner.FirstPlayer,
+            (TurnKind.Scissors, TurnKind.Rock) => RoundWinner.SecondPlayer,
+            (TurnKind.Scissors, TurnKind.Scissors) => RoundWinner.Draw,
+            (TurnKind.Scissors, TurnKind.Paper) => RoundWinner.FirstPlayer,
 
             // Первый игрок показывает "бумагу"
-            (MoveKind.Paper, MoveKind.Rock) => RoundWinner.FirstPlayer,
-            (MoveKind.Paper, MoveKind.Scissors) => RoundWinner.SecondPlayer,
-            (MoveKind.Paper, MoveKind.Paper) => RoundWinner.Draw,
+            (TurnKind.Paper, TurnKind.Rock) => RoundWinner.FirstPlayer,
+            (TurnKind.Paper, TurnKind.Scissors) => RoundWinner.SecondPlayer,
+            (TurnKind.Paper, TurnKind.Paper) => RoundWinner.Draw,
 
             _ => throw new ArgumentOutOfRangeException($"Unrecognized move kind")
         };

@@ -4,14 +4,14 @@ using Xunit;
 
 namespace NexignTests.UnitTests;
 
-public class JoinGameTests
+public sealed class JoinGameTests
 {
     [Fact]
-    public void Third_player_should_not_be_able_to_join_existing_game()
+    public void Third_player_should_not_be_able_to_join_game_with_two_already_joined_players()
     {
         // arrange
         var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());
-        game.Join(Guid.NewGuid()); // After that we have two players already - stop!
+        game.Join(Guid.NewGuid());
 
         // act
         var act = () => game.Join(Guid.NewGuid());

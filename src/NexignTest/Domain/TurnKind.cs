@@ -3,7 +3,7 @@
 /// <summary>
 /// Тип хода
 /// </summary>
-public enum MoveKind
+public enum TurnKind
 {
     /// <summary>
     /// Камень

@@ -21,12 +21,12 @@ public sealed class Game
 
     public void Join(Guid opponentId)
     {
-        if (HasOpponentAlreadyJoined())
+        if (IsGameLobbyFull())
             throw new InvalidOperationException("Game lobby is full! Try another lobby :)");
         OpponentId = opponentId;
     }
     
     [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
-    private bool HasOpponentAlreadyJoined() 
+    private bool IsGameLobbyFull() 
         => OpponentId is not null;
 }
