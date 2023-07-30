@@ -4,14 +4,22 @@ namespace NexignTest.Domain;
 
 public sealed class Game
 {
+    private const int MaxRoundsCount = 5;
+    
     public Guid Id { get; }
     public Guid CreatorId { get; }
     public Guid? OpponentId { get; private set; }
-    
+    public List<Round> Rounds { get; }
+
+    private int CurrentRoundNumber => Rounds.Count;
+
+    private Round? CurrentRound => CurrentRoundNumber >= 1 ? Rounds[^1] : null;
+
     private Game(Guid id, Guid creatorId)
     {
         Id = id;
         CreatorId = creatorId;
+        Rounds = new List<Round>(MaxRoundsCount);
     }
 
     public static Game Create(Guid id, Guid creatorId)
@@ -31,4 +39,14 @@ public sealed class Game
     [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
     public bool IsGameLobbyFull() 
         => OpponentId is not null;
+
+    public void StartNewRound()
+    {
+        if (CurrentRoundNumber == MaxRoundsCount)
+            throw new InvalidOperationException("Current round is last!");
+        
+        // TODO: надо проверить, что перед созданием нового раунда ОБА игрока сделали ход
+        
+        Rounds.Add(Round.Create(Guid.NewGuid(), CurrentRoundNumber + 1));
+    }
 }
