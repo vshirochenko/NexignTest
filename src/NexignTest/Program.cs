@@ -1,6 +1,15 @@
+using NexignTest.Data;
+using NexignTest.Features.Game;
+using NexignTest.Features.User;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddInfra();
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapUserEndpoints();
+app.MapGameEndpoints();
 
 app.Run();
+
