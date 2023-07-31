@@ -1,4 +1,4 @@
-﻿namespace NexignTest.Data;
+﻿namespace NexignTest.Infrastructure.Persistence;
 
 internal sealed class DbUser
 {

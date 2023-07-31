@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NexignTest.Features.Game;
+using NexignTest.Infrastructure.Domain;
+using NexignTest.Infrastructure.Persistence;
 
-namespace NexignTest.Data;
+namespace NexignTest.Infrastructure;
 
 internal static class ServiceCollectionExtensions
 {

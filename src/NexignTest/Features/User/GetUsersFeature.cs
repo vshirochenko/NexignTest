@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NexignTest.Data;
+using NexignTest.Infrastructure.Persistence;
 
 namespace NexignTest.Features.User;
 

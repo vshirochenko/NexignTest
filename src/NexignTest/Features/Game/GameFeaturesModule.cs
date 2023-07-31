@@ -6,5 +6,6 @@ internal static class GameFeaturesModule
     {
         builder.MapPost("/api/games", CreateGameFeature.Execute);
         builder.MapPost("/api/games/{gameId}/join", JoinGameFeature.Execute);
+        builder.MapPost("/api/games/{gameId}/rounds", CreateRoundFeature.Execute);
     }
 }

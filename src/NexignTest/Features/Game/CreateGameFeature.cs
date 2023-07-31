@@ -1,6 +1,4 @@
-﻿using NexignTest.Data;
-
-namespace NexignTest.Features.Game;
+﻿namespace NexignTest.Features.Game;
 
 internal static class CreateGameFeature
 {

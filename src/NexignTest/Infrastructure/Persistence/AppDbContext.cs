@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace NexignTest.Data;
+namespace NexignTest.Infrastructure.Persistence;
 
 internal sealed class AppDbContext : DbContext
 {
     public DbSet<DbUser> Users { get; set; } = null!;
     public DbSet<DbGame> Games { get; set; } = null!;
     public DbSet<DbGamePlayer> GamePlayers { get; set; } = null!;
+    public DbSet<DbRound> Rounds { get; set; } = null!;
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -37,6 +38,15 @@ internal sealed class AppDbContext : DbContext
                 .HasOne(x => x.Player)
                 .WithMany(x => x.GamePlayers)
                 .HasForeignKey(x => x.PlayerId);
+        });
+
+        modelBuilder.Entity<DbRound>(builder =>
+        {
+            builder.HasKey(x => x.Id);
+            builder
+                .HasOne(x => x.Game)
+                .WithMany(x => x.Rounds)
+                .HasForeignKey(x => x.GameId);
         });
     }
 }

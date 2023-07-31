@@ -1,6 +1,6 @@
-using NexignTest.Data;
 using NexignTest.Features.Game;
 using NexignTest.Features.User;
+using NexignTest.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
