@@ -37,4 +37,14 @@ public sealed class Round
     {
         OpponentTurn = turn;
     }
+
+    public bool HasCreatorMadeTurn()
+    {
+        return CreatorTurn is not null;
+    }
+    
+    public bool HasOpponentMadeTurn()
+    {
+        return OpponentTurn is not null;
+    }
 }

@@ -86,9 +86,17 @@ public sealed class Game
             throw new InvalidOperationException("Cannot make turn because of game not started yet!");
 
         if (playerId == CreatorId)
+        {
+            if (CurrentRound.HasCreatorMadeTurn())
+                throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
             CurrentRound.MakeCreatorTurn(turn);
+        }
         else if (playerId == OpponentId)
+        {
+            if (CurrentRound.HasOpponentMadeTurn())
+                throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
             CurrentRound.MakeOpponentTurn(turn);
+        }
         else
             throw new InvalidOperationException("Unknown player detected!");
     }

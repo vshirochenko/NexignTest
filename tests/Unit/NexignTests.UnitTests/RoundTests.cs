@@ -126,4 +126,38 @@ public sealed class RoundTests
         game.CurrentRound.Should().NotBeNull();
         game.CurrentRound!.OpponentTurn.Should().Be(opponentTurn);
     }
+
+    [Fact]
+    public void Creator_cannot_make_turn_twice_in_the_same_round()
+    {
+        // arrange
+        var creatorId = Guid.NewGuid();
+        var game = Game.Create(Guid.NewGuid(), creatorId);
+        game.Join(Guid.NewGuid());
+        game.StartNewRound();
+        game.MakeTurn(creatorId, TurnKind.Rock);
+        
+        // act
+        var act = () => game.MakeTurn(creatorId, TurnKind.Rock);
+        
+        // assert
+        act.Should().Throw<InvalidOperationException>();
+    }
+    
+    [Fact]
+    public void Opponent_cannot_make_turn_twice_in_the_same_round()
+    {
+        // arrange
+        var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());
+        var opponentId = Guid.NewGuid();
+        game.Join(opponentId);
+        game.StartNewRound();
+        game.MakeTurn(opponentId, TurnKind.Rock);
+        
+        // act
+        var act = () => game.MakeTurn(opponentId, TurnKind.Rock);
+        
+        // assert
+        act.Should().Throw<InvalidOperationException>();
+    }
 }
