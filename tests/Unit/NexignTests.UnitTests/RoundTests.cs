@@ -82,10 +82,10 @@ public sealed class RoundTests
         var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());
         game.Join(Guid.NewGuid());
         game.StartNewRound();
-        var userFromOutsideId = Guid.NewGuid(); 
+        var playerFromOutsideId = Guid.NewGuid(); 
         
         // act
-        var act = () => game.MakeTurn(userFromOutsideId, TurnKind.Paper);
+        var act = () => game.MakeTurn(playerFromOutsideId, TurnKind.Paper);
         
         // assert
         act.Should().Throw<InvalidOperationException>();

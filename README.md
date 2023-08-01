@@ -3,7 +3,7 @@
 ## API
 
 ### Игроки
-1. Создание игрока: [POST] http://localhost:5000/api/users  
+1. Создание игрока: [POST] http://localhost:5000/api/players  
    Request: 
    ```
    {
@@ -17,7 +17,7 @@
      "Name": "" // string
    }
    ```
-2. Получение списка игроков: [GET] http://localhost:5000/api/users  
+2. Получение списка игроков: [GET] http://localhost:5000/api/players  
    Response:
    ```
    [

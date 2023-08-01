@@ -10,7 +10,7 @@ internal static class CreateGameFeature
         var newGameId = Guid.NewGuid();
         var game = Domain.Game.Create(newGameId, req.CreatorId);
         await gameRepository.Save(game, stoppingToken);
-        return Results.Created($"/api/users/{newGameId}", new CreateGameResponse(newGameId));
+        return Results.Created($"/api/games/{newGameId}", new CreateGameResponse(newGameId));
     } 
     
     internal sealed record CreateGameRequest(Guid CreatorId);

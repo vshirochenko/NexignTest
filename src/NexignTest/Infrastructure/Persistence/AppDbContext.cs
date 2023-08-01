@@ -4,7 +4,7 @@ namespace NexignTest.Infrastructure.Persistence;
 
 internal sealed class AppDbContext : DbContext
 {
-    public DbSet<DbPlayer> Users { get; set; } = null!;
+    public DbSet<DbPlayer> Players { get; set; } = null!;
     public DbSet<DbGame> Games { get; set; } = null!;
     public DbSet<DbRound> Rounds { get; set; } = null!;
 
