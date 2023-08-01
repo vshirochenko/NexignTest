@@ -10,7 +10,7 @@ internal static class CreateUserFeature
         CancellationToken stoppingToken)
     {
         var newUserId = Guid.NewGuid();
-        ctx.Users.Add(new DbUser(newUserId, req.Name));
+        ctx.Users.Add(new DbPlayer(newUserId, req.Name));
         await ctx.SaveChangesAsync(stoppingToken);
         return Results.Created($"/api/users/{newUserId}", new CreateUserResponse(newUserId, req.Name));
     } 

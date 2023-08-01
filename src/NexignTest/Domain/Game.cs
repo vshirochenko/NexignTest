@@ -9,22 +9,34 @@ public sealed class Game
     public Guid Id { get; }
     public Guid CreatorId { get; }
     public Guid? OpponentId { get; private set; }
-    public List<Round> Rounds { get; }
+
+    private List<Round> _rounds;
+    public IReadOnlyCollection<Round> Rounds => _rounds;
 
     private int CurrentRoundNumber => Rounds.Count;
 
-    public Round? CurrentRound => CurrentRoundNumber >= 1 ? Rounds[^1] : null;
+    public Round? CurrentRound => CurrentRoundNumber >= 1 ? _rounds[^1] : null;
 
     private Game(Guid id, Guid creatorId)
     {
         Id = id;
         CreatorId = creatorId;
-        Rounds = new List<Round>(MaxRoundsCount);
+        _rounds = new List<Round>(MaxRoundsCount);
     }
 
     public static Game Create(Guid id, Guid creatorId)
     {
         return new Game(id, creatorId);
+    }
+
+    public static Game Load(Guid id, Guid creatorId, Guid? opponentId, List<Round> rounds)
+    {
+        var game = new Game(id, creatorId)
+        {
+            OpponentId = opponentId,
+            _rounds = rounds
+        };
+        return game;
     }
 
     public void Join(Guid opponentId)
@@ -54,7 +66,7 @@ public sealed class Game
 
         // TODO: надо проверить, что перед созданием нового раунда ОБА игрока сделали ход
 
-        Rounds.Add(Round.Create(Guid.NewGuid(), CurrentRoundNumber + 1, CreatorId, OpponentId.Value));
+        _rounds.Add(Round.Create(Guid.NewGuid(), CurrentRoundNumber + 1));
     }
 
     public void MakeTurn(Guid playerId, TurnKind turn)

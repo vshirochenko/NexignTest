@@ -4,9 +4,8 @@ namespace NexignTest.Infrastructure.Persistence;
 
 internal sealed class AppDbContext : DbContext
 {
-    public DbSet<DbUser> Users { get; set; } = null!;
+    public DbSet<DbPlayer> Users { get; set; } = null!;
     public DbSet<DbGame> Games { get; set; } = null!;
-    public DbSet<DbGamePlayer> GamePlayers { get; set; } = null!;
     public DbSet<DbRound> Rounds { get; set; } = null!;
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
@@ -15,7 +14,7 @@ internal sealed class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<DbUser>(builder =>
+        modelBuilder.Entity<DbPlayer>(builder =>
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Name);
@@ -25,19 +24,14 @@ internal sealed class AppDbContext : DbContext
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.CreatorId);
-        });
-        
-        modelBuilder.Entity<DbGamePlayer>(builder =>
-        {
-            builder.HasKey(x => new { x.GameId, x.PlayerId });
             builder
-                .HasOne(x => x.Game)
-                .WithMany(x => x.GamePlayers)
-                .HasForeignKey(x => x.GameId);
+                .HasOne(x => x.Creator)
+                .WithMany(x => x.CreatorGames)
+                .HasForeignKey(x => x.CreatorId);
             builder
-                .HasOne(x => x.Player)
-                .WithMany(x => x.GamePlayers)
-                .HasForeignKey(x => x.PlayerId);
+                .HasOne(x => x.Opponent)
+                .WithMany(x => x.OpponentGames)
+                .HasForeignKey(x => x.OpponentId);
         });
 
         modelBuilder.Entity<DbRound>(builder =>

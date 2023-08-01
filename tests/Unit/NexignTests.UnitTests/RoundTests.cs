@@ -66,7 +66,6 @@ public sealed class RoundTests
         
         // assert
         game.CurrentRound.Should().NotBeNull();
-        game.CurrentRound!.CreatorId.Should().Be(creatorId);
         game.CurrentRound!.CreatorTurn.Should().Be(creatorTurn);
     }
     
@@ -85,7 +84,6 @@ public sealed class RoundTests
         
         // assert
         game.CurrentRound.Should().NotBeNull();
-        game.CurrentRound!.OpponentId.Should().Be(opponentId);
         game.CurrentRound!.OpponentTurn.Should().Be(opponentTurn);
     }
 }
