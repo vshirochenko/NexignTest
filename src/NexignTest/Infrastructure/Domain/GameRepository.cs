@@ -43,7 +43,10 @@ internal sealed class GameRepository : IGameRepository
             
             foreach (var round in game.Rounds)
             {
-                if (!dbGame.Rounds.Any(x => x.Id == round.Id))
+                // TODO: подумать про то, стоит ли заморачиваться с предыдущими раундами,
+                // они все-таки readonly...
+                var dbRound = dbGame.Rounds.SingleOrDefault(x => x.Id == round.Id); 
+                if (dbRound is null)
                 {
                     _db.Rounds.Add(new DbRound(round.Id)
                     {
@@ -53,7 +56,12 @@ internal sealed class GameRepository : IGameRepository
                         OpponentTurn = (int?)round.OpponentTurn
                     });
                 }
-                
+                else
+                {
+                    dbRound.Number = round.Number;
+                    dbRound.CreatorTurn = (int?) round.CreatorTurn;
+                    dbRound.OpponentTurn = (int?) round.OpponentTurn;
+                }
             }
         }
         await _db.SaveChangesAsync(stoppingToken);
