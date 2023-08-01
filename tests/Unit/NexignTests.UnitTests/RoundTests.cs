@@ -20,13 +20,53 @@ public sealed class RoundTests
     }
     
     [Fact]
-    public void Cannot_start_more_than_five_rounds()
+    public void Can_start_new_round_if_it_will_be_the_first()
     {
         // arrange
         var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());
         game.Join(Guid.NewGuid());
-        for (var i = 0; i < 5; i++) 
+        
+        // act
+        var act = () => game.StartNewRound();
+        
+        // assert
+        act.Should().NotThrow();
+        game
+            .Rounds.Should().ContainSingle().Which
+            .Number.Should().Be(1);
+    }
+    
+    [Fact]
+    public void Cannot_start_new_round_if_current_round_is_not_completed()
+    {
+        // arrange
+        var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());
+        game.Join(Guid.NewGuid());
+        game.StartNewRound();
+        
+        // act
+        var act = () => game.StartNewRound();
+        
+        // assert
+        act.Should().Throw<InvalidOperationException>();
+    }
+    
+    [Fact]
+    public void Cannot_start_more_than_five_rounds()
+    {
+        // arrange
+        var creatorId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
+        var game = Game.Create(Guid.NewGuid(), creatorId);
+        game.Join(opponentId);
+        for (var i = 0; i < 5; i++)
+        {
+            // Imitate players' turns
             game.StartNewRound();
+            game.MakeTurn(creatorId, TurnKind.Rock);
+            game.MakeTurn(opponentId, TurnKind.Rock);
+        }
+            
 
         // act
         var act = () => game.StartNewRound();
@@ -52,7 +92,7 @@ public sealed class RoundTests
     }
     
     [Fact]
-    public void Turn_in_round_should_be_recognized_as_game_creator_turn()
+    public void Turn_in_round_by_creator_should_be_recognized_as_game_creator_turn()
     {
         // arrange
         var creatorId = Guid.NewGuid();
@@ -70,7 +110,7 @@ public sealed class RoundTests
     }
     
     [Fact]
-    public void Turn_in_round_should_be_recognized_as_opponent_turn()
+    public void Turn_in_round_by_opponent_should_be_recognized_as_opponent_turn()
     {
         // arrange
         var game = Game.Create(Guid.NewGuid(), Guid.NewGuid());

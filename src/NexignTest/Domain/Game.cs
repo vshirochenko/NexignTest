@@ -49,11 +49,11 @@ public sealed class Game
     }
 
     [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
-    public bool IsGameLobbyFull()
+    private bool IsGameLobbyFull()
         => OpponentId is not null;
 
     [MemberNotNullWhen(returnValue: true, member: nameof(CurrentRound))]
-    public bool IsGameStarted()
+    private bool IsGameStarted()
         => CurrentRound is not null;
 
     public void StartNewRound()
@@ -61,12 +61,23 @@ public sealed class Game
         if (!IsGameLobbyFull())
             throw new InvalidOperationException("Wait for opponent!");
 
-        if (CurrentRoundNumber == MaxRoundsCount)
+        if (IsGameStarted() && IsCurrentRoundActive())
+            throw new InvalidOperationException("Current round is not over yet!");
+        
+        if (IsCurrentRoundLast())
             throw new InvalidOperationException("Current round is last!");
 
-        // TODO: надо проверить, что перед созданием нового раунда ОБА игрока сделали ход
-
         _rounds.Add(Round.Create(Guid.NewGuid(), CurrentRoundNumber + 1));
+    }
+
+    private bool IsCurrentRoundLast()
+    {
+        return CurrentRoundNumber == MaxRoundsCount;
+    }
+
+    private bool IsCurrentRoundActive()
+    {
+        return CurrentRound is not null && (CurrentRound.CreatorTurn is null || CurrentRound.OpponentTurn is null);
     }
 
     public void MakeTurn(Guid playerId, TurnKind turn)
