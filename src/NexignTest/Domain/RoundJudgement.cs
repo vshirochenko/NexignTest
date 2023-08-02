@@ -2,8 +2,8 @@
 
 public static class RoundJudgement
 {
-    public static RoundWinner GetWinner(TurnKind firstPlayerTurn, TurnKind secondPlayerTurn)
-        => (firstTurn: firstPlayerTurn, secondTurn: secondPlayerTurn) switch
+    public static RoundWinner GetWinner(TurnKind creatorTurn, TurnKind opponentTurn)
+        => (creatorTurn, opponentTurn) switch
         {
             // Первый игрок показывает "камень"
             (TurnKind.Rock, TurnKind.Rock) => RoundWinner.Draw,
