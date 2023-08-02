@@ -2,6 +2,12 @@
 
 ![CI](https://github.com/vshirochenko/NexignTest/actions/workflows/ci.yml/badge.svg)
 
+## Правила игры:
+Игра проводится между двумя игроками в 5 раундов. Игра может завершиться досрочно (если будет понятно, что один из игроков "сильно вырвался вперед").  
+В каждом раунде игроки могут выполнить только по одному ходу (выбросив камень, ножницы или бумагу).
+Одна из особенностей - очередной раунд необходимо создавать вручную, дергая api. Кол-во раундов по ум. - 5.  
+Результат каждого раунда может иметь 3 результата: поражение, ничья и победа. 
+
 ## Локальный запуск
 
 ### Запуск api-сервиса
@@ -45,15 +51,24 @@
      "Id": "" // Guid
    }
    ```
-2. Подключение к игре: [POST] http://localhost:5000/api/games/{gameId}/join  
+2. Получение списка игр: [GET] http://localhost:5000/api/games  
+   Response:
+   ```
+   [
+     {
+       "Id": "" // Guid
+     }
+   ]
+   ```
+3. Подключение к игре: [POST] http://localhost:5000/api/games/{gameId}/join  
    Request:
    ```
    {
      "OpponentId": ""  // Guid
    }
    ```
-3. Старт нового раунда: [POST] http://localhost:5000/api/games/{gameId}/rounds  
-4. Ход в опред. раунде: [PUT] http://localhost:5000/api/games/{gameId}/rounds/{roundId}/turn    
+4. Старт нового раунда: [POST] http://localhost:5000/api/games/{gameId}/rounds  
+5. Ход в опред. раунде: [PUT] http://localhost:5000/api/games/{gameId}/rounds/{roundId}/turn    
    Request:
    ```
    {

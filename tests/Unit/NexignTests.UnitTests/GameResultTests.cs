@@ -45,4 +45,26 @@ public sealed class GameResultTests
         // assert
         game.WinnerId.Should().Be(null);
     }
+
+    [Fact]
+    public void Creator_is_winner_before_all_rounds_completed_because_he_has_already_enough_round_wins()
+    {
+        // arrange
+        var creatorId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
+        var game = Game.Create(Guid.NewGuid(), creatorId, maxRoundsCount: 3);
+        game.Join(opponentId);
+        
+        // act
+        game.StartNewRound();
+        game.MakeTurn(creatorId, TurnKind.Rock); // Win
+        game.MakeTurn(opponentId, TurnKind.Scissors); // Loose
+        
+        game.StartNewRound();
+        game.MakeTurn(creatorId, TurnKind.Rock); // Win
+        game.MakeTurn(opponentId, TurnKind.Scissors); // Loose
+        
+        // assert
+        game.WinnerId.Should().Be(creatorId);
+    }
 }

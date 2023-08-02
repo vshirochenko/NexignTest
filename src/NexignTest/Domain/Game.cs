@@ -85,10 +85,14 @@ public sealed class Game : IAggregate
             if (CurrentRound.HasCreatorMadeTurn())
                 throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
             var result = CurrentRound.MakeCreatorTurn(turn);
-            if (IsGameOver())
+            if (CanGetWinner())
             {
                 WinnerId = GetGameWinnerId();
                 _domainEvents.Add(new GameIsOverEvent(Id, WinnerId));
+            }
+            else if (IsCurrentRoundLastAndOver())
+            {
+                _domainEvents.Add(new GameIsOverEvent(Id, null));
             }
 
             return result;
@@ -100,10 +104,14 @@ public sealed class Game : IAggregate
                 throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
 
             var result = CurrentRound.MakeOpponentTurn(turn);
-            if (IsGameOver())
+            if (CanGetWinner())
             {
                 WinnerId = GetGameWinnerId();
                 _domainEvents.Add(new GameIsOverEvent(Id, WinnerId));
+            }
+            else if (IsCurrentRoundLastAndOver())
+            {
+                _domainEvents.Add(new GameIsOverEvent(Id, null));
             }
 
             return result;
@@ -126,23 +134,32 @@ public sealed class Game : IAggregate
         return CurrentRoundNumber == MaxRoundsCount;
     }
 
+    private bool IsCurrentRoundLastAndOver()
+    {
+        return IsCurrentRoundLast() && CurrentRound.IsRoundOver();
+    }
+
     private bool IsCurrentRoundActive()
     {
         return CurrentRound is not null && (!CurrentRound.HasCreatorMadeTurn() || !CurrentRound.HasOpponentMadeTurn());
     }
 
-    private void ThrowIfGameIsOver()
+    private bool CanGetWinner()
     {
-        if (IsGameOver())
-            throw new InvalidOperationException("Game is over :(");
+        var draws = _rounds.Count(x => x.Winner == RoundWinner.Draw);
+        var creatorWins = _rounds.Count(x => x.Winner == RoundWinner.Creator);
+        var opponentWins = _rounds.Count(x => x.Winner == RoundWinner.Opponent);
+
+        return Math.Abs(creatorWins - opponentWins) > (MaxRoundsCount - draws) / 2;
     }
     
-    private bool IsGameOver()
+    private void ThrowIfGameIsOver()
     {
-        return IsCurrentRoundLast() && CurrentRound.IsRoundOver();
+        if (WinnerId is not null || IsCurrentRoundLast() && CurrentRound.IsRoundOver())
+            throw new InvalidOperationException("Game is over :(");
     }
 
-    private Guid? GetGameWinnerId()
+    private Guid GetGameWinnerId()
     {
         var creatorWins = _rounds.Count(x => x.Winner == RoundWinner.Creator);
         var opponentWins = _rounds.Count(x => x.Winner == RoundWinner.Opponent);
@@ -150,7 +167,7 @@ public sealed class Game : IAggregate
         if (creatorWins > opponentWins)
             return CreatorId;
         if (creatorWins < opponentWins)
-            return OpponentId;
-        return null;
+            return OpponentId!.Value;
+        throw new InvalidOperationException("Draw - is not possible result!");
     }
 }
