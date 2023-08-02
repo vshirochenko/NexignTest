@@ -20,6 +20,6 @@ public static class RoundJudgement
             (TurnKind.Paper, TurnKind.Scissors) => RoundWinner.SecondPlayer,
             (TurnKind.Paper, TurnKind.Paper) => RoundWinner.Draw,
 
-            _ => throw new ArgumentOutOfRangeException($"Unrecognized move kind")
+            (_, _) => throw new ArgumentOutOfRangeException("Unrecognized move kind", (Exception?) null)
         };
 }

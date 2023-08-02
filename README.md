@@ -1,5 +1,7 @@
 # NexignTest
 
+![CI](https://github.com/vshirochenko/NexignTest/actions/workflows/ci.yml/badge.svg)
+
 ## API
 
 ### Игроки

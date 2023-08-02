@@ -12,10 +12,12 @@ internal static class MakeTurnFeature
         CancellationToken stoppingToken)
     {
         var game = await gameRepository.Load(gameId, stoppingToken);
-        game.MakeTurn(req.PlayerId, (TurnKind) req.Turn);
+        var result = game.MakeTurn(req.PlayerId, (TurnKind) req.Turn);
         await gameRepository.Save(game, stoppingToken);
-        return Results.Ok();
+        return Results.Ok(new MakeTurnResponse((int) result));
     } 
     
     internal sealed record MakeTurnRequest(Guid PlayerId, int Turn);
+
+    internal sealed record MakeTurnResponse(int Result);
 }

@@ -48,14 +48,6 @@ public sealed class Game
         OpponentId = opponentId;
     }
 
-    [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
-    private bool IsGameLobbyFull()
-        => OpponentId is not null;
-
-    [MemberNotNullWhen(returnValue: true, member: nameof(CurrentRound))]
-    private bool IsGameStarted()
-        => CurrentRound is not null;
-
     public void StartNewRound()
     {
         if (!IsGameLobbyFull())
@@ -70,17 +62,7 @@ public sealed class Game
         _rounds.Add(Round.Create(Guid.NewGuid(), CurrentRoundNumber + 1));
     }
 
-    private bool IsCurrentRoundLast()
-    {
-        return CurrentRoundNumber == MaxRoundsCount;
-    }
-
-    private bool IsCurrentRoundActive()
-    {
-        return CurrentRound is not null && (CurrentRound.CreatorTurn is null || CurrentRound.OpponentTurn is null);
-    }
-
-    public void MakeTurn(Guid playerId, TurnKind turn)
+    public RoundResult MakeTurn(Guid playerId, TurnKind turn)
     {
         if (!IsGameStarted())
             throw new InvalidOperationException("Cannot make turn because of game not started yet!");
@@ -89,15 +71,34 @@ public sealed class Game
         {
             if (CurrentRound.HasCreatorMadeTurn())
                 throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
-            CurrentRound.MakeCreatorTurn(turn);
+            return CurrentRound.MakeCreatorTurn(turn);
         }
-        else if (playerId == OpponentId)
+
+        if (playerId == OpponentId)
         {
             if (CurrentRound.HasOpponentMadeTurn())
                 throw new InvalidOperationException("You've made turn already! Please wait for your opponent :)");
-            CurrentRound.MakeOpponentTurn(turn);
+            return CurrentRound.MakeOpponentTurn(turn);
         }
-        else
-            throw new InvalidOperationException("Unknown player detected!");
+
+        throw new InvalidOperationException("Unknown player detected!");
+    }
+    
+    [MemberNotNullWhen(returnValue: true, member: nameof(OpponentId))]
+    private bool IsGameLobbyFull()
+        => OpponentId is not null;
+
+    [MemberNotNullWhen(returnValue: true, member: nameof(CurrentRound))]
+    private bool IsGameStarted()
+        => CurrentRound is not null;
+    
+    private bool IsCurrentRoundLast()
+    {
+        return CurrentRoundNumber == MaxRoundsCount;
+    }
+
+    private bool IsCurrentRoundActive()
+    {
+        return CurrentRound is not null && (CurrentRound.CreatorTurn is null || CurrentRound.OpponentTurn is null);
     }
 }

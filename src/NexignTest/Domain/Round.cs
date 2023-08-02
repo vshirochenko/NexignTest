@@ -1,4 +1,6 @@
-﻿namespace NexignTest.Domain;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace NexignTest.Domain;
 
 public sealed class Round
 {
@@ -6,6 +8,8 @@ public sealed class Round
     public int Number { get; }
     public TurnKind? CreatorTurn { get; private set; }
     public TurnKind? OpponentTurn { get; private set; }
+    
+    public bool IsOver { get; private set; }
 
     private Round(Guid id, int number)
     {
@@ -28,21 +32,55 @@ public sealed class Round
         return round;
     }
 
-    public void MakeCreatorTurn(TurnKind turn)
+    public RoundResult MakeCreatorTurn(TurnKind turn)
     {
         CreatorTurn = turn;
+
+        if (!HasOpponentMadeTurn()) 
+            return RoundResult.NotReady;
+        
+        var winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
+        var result = winner switch
+        {
+            RoundWinner.FirstPlayer => RoundResult.Won,
+            RoundWinner.SecondPlayer => RoundResult.Lost,
+            RoundWinner.Draw => RoundResult.Draw,
+            _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
+        };
+        // TODO: можно обрабатывать повторные ходы, если ничья
+
+        IsOver = true;
+        return result;
     }
     
-    public void MakeOpponentTurn(TurnKind turn)
+    public RoundResult MakeOpponentTurn(TurnKind turn)
     {
         OpponentTurn = turn;
+        
+        if (!HasCreatorMadeTurn()) 
+            return RoundResult.NotReady;
+        
+        var winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
+        var result = winner switch
+        {
+            RoundWinner.FirstPlayer => RoundResult.Lost,
+            RoundWinner.SecondPlayer => RoundResult.Won,
+            RoundWinner.Draw => RoundResult.Draw,
+            _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
+        };
+        // TODO: можно обрабатывать повторные ходы, если ничья
+
+        IsOver = true;
+        return result;
     }
 
+    [MemberNotNullWhen(returnValue: true, member: nameof(CreatorTurn))]
     public bool HasCreatorMadeTurn()
     {
         return CreatorTurn is not null;
     }
     
+    [MemberNotNullWhen(returnValue: true, member: nameof(OpponentTurn))]
     public bool HasOpponentMadeTurn()
     {
         return OpponentTurn is not null;
