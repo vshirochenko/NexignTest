@@ -6,10 +6,10 @@ namespace NexignTest.Features.Player;
 internal static class GetPlayersFeature
 {
     public static async Task<IResult> Execute(
-        AppDbContext ctx,
+        AppDbContext db,
         CancellationToken stoppingToken)
     {
-        var players = await ctx.Players.Select(x => new PlayerInListDto(x.Id, x.Name)).ToArrayAsync(stoppingToken);
+        var players = await db.Players.Select(x => new PlayerInListDto(x.Id, x.Name)).ToArrayAsync(stoppingToken);
         return Results.Ok(players);
     }
     
