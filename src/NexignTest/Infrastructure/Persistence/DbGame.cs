@@ -11,6 +11,9 @@ internal sealed class DbGame
     public DbPlayer? Opponent { get; set; }
     
     public Guid? WinnerId { get; set; }
+    public bool IsDraw { get; set; }
+    
+    public bool IsOver { get; set; }
     
     public List<DbRound> Rounds { get; } = new();
 

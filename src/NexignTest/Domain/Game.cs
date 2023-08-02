@@ -21,6 +21,10 @@ public sealed class Game : IAggregate
     public Round? CurrentRound => CurrentRoundNumber >= 1 ? _rounds[^1] : null;
     
     public Guid? WinnerId { get; private set; }
+    
+    public bool IsDraw { get; private set; }
+
+    public bool IsOver => WinnerId is not null || IsDraw;
 
     private Game(Guid id, Guid creatorId, int maxRoundsCount)
     {
@@ -92,6 +96,7 @@ public sealed class Game : IAggregate
             }
             else if (IsCurrentRoundLastAndOver())
             {
+                IsDraw = true;
                 _domainEvents.Add(new GameIsOverEvent(Id, null));
             }
 
@@ -111,6 +116,7 @@ public sealed class Game : IAggregate
             }
             else if (IsCurrentRoundLastAndOver())
             {
+                IsDraw = true;
                 _domainEvents.Add(new GameIsOverEvent(Id, null));
             }
 
@@ -155,7 +161,7 @@ public sealed class Game : IAggregate
     
     private void ThrowIfGameIsOver()
     {
-        if (WinnerId is not null || IsCurrentRoundLast() && CurrentRound.IsRoundOver())
+        if (WinnerId is not null || IsDraw)
             throw new InvalidOperationException("Game is over :(");
     }
 

@@ -6,8 +6,9 @@ internal static class GameFeaturesModule
     {
         builder.MapPost("/api/games", CreateGameFeature.Execute);
         builder.MapGet("/api/games", GetGamesFeature.Execute);
+        builder.MapGet("/api/games/{gameId}/stats", GetGameStatsFeature.Execute);
         builder.MapPost("/api/games/{gameId}/join", JoinGameFeature.Execute);
         builder.MapPost("/api/games/{gameId}/rounds", CreateRoundFeature.Execute);
-        builder.MapPut("/api/games/{gameId}/rounds/{roundId}/turn", MakeTurnFeature.Execute);
+        builder.MapPut("/api/games/{gameId}/rounds/turn", MakeTurnFeature.Execute);
     }
 }

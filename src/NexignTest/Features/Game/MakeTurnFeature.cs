@@ -6,7 +6,6 @@ internal static class MakeTurnFeature
 {
     public static async Task<IResult> Execute(
         Guid gameId,
-        Guid roundId,
         MakeTurnRequest req,
         IGameRepository gameRepository,
         CancellationToken stoppingToken)
@@ -19,5 +18,5 @@ internal static class MakeTurnFeature
     
     internal sealed record MakeTurnRequest(Guid PlayerId, int Turn);
 
-    internal sealed record MakeTurnResponse(int Result);
+    private sealed record MakeTurnResponse(int Result);
 }

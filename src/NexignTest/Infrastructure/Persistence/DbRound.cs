@@ -6,6 +6,8 @@ internal sealed class DbRound
     public int Number { get; set; }
     public int? CreatorTurn { get; set; }
     public int? OpponentTurn { get; set; }
+    
+    public int? Winner { get; set; }
 
     public Guid GameId { get; set; }
     public DbGame Game { get; set; } = null!;

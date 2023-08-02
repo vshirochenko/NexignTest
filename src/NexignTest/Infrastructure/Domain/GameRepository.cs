@@ -43,11 +43,11 @@ internal sealed class GameRepository : IGameRepository
         {
             dbGame.OpponentId = game.OpponentId;
             dbGame.WinnerId = game.WinnerId;
+            dbGame.IsDraw = game.IsDraw;
+            dbGame.IsOver = game.IsOver;
             
             foreach (var round in game.Rounds)
             {
-                // TODO: подумать про то, стоит ли заморачиваться с предыдущими раундами,
-                // они все-таки readonly...
                 var dbRound = dbGame.Rounds.SingleOrDefault(x => x.Id == round.Id); 
                 if (dbRound is null)
                 {
@@ -64,6 +64,7 @@ internal sealed class GameRepository : IGameRepository
                     dbRound.Number = round.Number;
                     dbRound.CreatorTurn = (int?) round.CreatorTurn;
                     dbRound.OpponentTurn = (int?) round.OpponentTurn;
+                    dbRound.Winner = (int?)round.Winner;
                 }
             }
         }

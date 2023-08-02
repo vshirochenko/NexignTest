@@ -12,9 +12,6 @@ internal static class JoinGameFeature
         CancellationToken stoppingToken)
     {
         var game = await gameRepository.Load(gameId, stoppingToken);
-        
-        // TODO: check opponent existance!
-        
         game.Join(req.OpponentId);
         await gameRepository.Save(game, stoppingToken);
         return Results.Ok();
