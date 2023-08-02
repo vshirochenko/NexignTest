@@ -4,6 +4,7 @@ internal sealed class DbGame
 {
     public Guid Id { get; }
     public Guid CreatorId { get; }
+    public int MaxRoundsCount { get; }
     public DbPlayer Creator { get; set; } = null!;
     
     public Guid? OpponentId { get; set; }
@@ -11,9 +12,10 @@ internal sealed class DbGame
     
     public List<DbRound> Rounds { get; } = new();
 
-    public DbGame(Guid id, Guid creatorId)
+    public DbGame(Guid id, Guid creatorId, int maxRoundsCount)
     {
         Id = id;
         CreatorId = creatorId;
+        MaxRoundsCount = maxRoundsCount;
     }
 }

@@ -8,8 +8,6 @@ public sealed class Round
     public int Number { get; }
     public TurnKind? CreatorTurn { get; private set; }
     public TurnKind? OpponentTurn { get; private set; }
-    
-    public bool IsOver { get; private set; }
 
     private Round(Guid id, int number)
     {
@@ -47,9 +45,7 @@ public sealed class Round
             RoundWinner.Draw => RoundResult.Draw,
             _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
         };
-        // TODO: можно обрабатывать повторные ходы, если ничья
 
-        IsOver = true;
         return result;
     }
     
@@ -68,9 +64,7 @@ public sealed class Round
             RoundWinner.Draw => RoundResult.Draw,
             _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
         };
-        // TODO: можно обрабатывать повторные ходы, если ничья
 
-        IsOver = true;
         return result;
     }
 
@@ -84,5 +78,10 @@ public sealed class Round
     public bool HasOpponentMadeTurn()
     {
         return OpponentTurn is not null;
+    }
+    
+    public bool IsRoundOver()
+    {
+        return HasCreatorMadeTurn() && HasOpponentMadeTurn();
     }
 }

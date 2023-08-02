@@ -25,8 +25,9 @@ internal sealed class GameRepository : IGameRepository
         var game = Game.Load(
             dbGame.Id, 
             dbGame.CreatorId, 
+            dbGame.MaxRoundsCount,
             dbGame.OpponentId, 
-            dbGame.Rounds.Select(x => Round.Load(x.Id, x.Number, (TurnKind?) x.CreatorTurn, (TurnKind?) x.OpponentTurn)).ToList());
+            dbGame.Rounds.Select(x => Round.Load(x.Id, x.Number, (TurnKind?) x.CreatorTurn, (TurnKind?) x.OpponentTurn)).OrderBy(x => x.Number).ToList());
         return game;
     }
 
@@ -35,7 +36,7 @@ internal sealed class GameRepository : IGameRepository
         var dbGame = await _db.Games.FindAsync(game.Id, stoppingToken);
         if (dbGame is null)
         {
-            _db.Games.Add(new DbGame(game.Id, game.CreatorId));
+            _db.Games.Add(new DbGame(game.Id, game.CreatorId, game.MaxRoundsCount));
         }
         else
         {

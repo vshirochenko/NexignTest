@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NexignTest.Domain;
 
 namespace NexignTest.Infrastructure.Persistence;
 
@@ -24,6 +25,7 @@ internal sealed class AppDbContext : DbContext
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.CreatorId);
+            builder.Property(x => x.MaxRoundsCount);
             builder
                 .HasOne(x => x.Creator)
                 .WithMany(x => x.CreatorGames)
@@ -42,5 +44,26 @@ internal sealed class AppDbContext : DbContext
                 .WithMany(x => x.Rounds)
                 .HasForeignKey(x => x.GameId);
         });
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+    {
+        // Handling domain events (dirty, but example ;))
+        var domainEntities = ChangeTracker
+            .Entries<IAggregate>()
+            .Where(x => x.Entity.DomainEvents.Any())
+            .Select(x => x.Entity)
+            .ToList();
+
+        var domainEvents = domainEntities
+            .SelectMany(x => x.DomainEvents)
+            .ToArray();
+
+        foreach (var @event in domainEvents)
+        {
+            // Notify clients about some events (for example, game over)
+        }
+        
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }
