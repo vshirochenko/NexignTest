@@ -2,6 +2,14 @@
 
 ![CI](https://github.com/vshirochenko/NexignTest/actions/workflows/ci.yml/badge.svg)
 
+## Локальный запуск
+
+### Запуск api-сервиса
+Запустите файл `run.ps1`
+
+### Выполнение тестов
+Запустите файл `tests.ps1`
+
 ## API
 
 ### Игроки
@@ -30,7 +38,7 @@
    ]
    ```
 ### Игра
-1. Создание игры: [POST] http://localhost:5000/api/games
+1. Создание игры: [POST] http://localhost:5000/api/games  
    Response:
    ```
    {
@@ -45,7 +53,7 @@
    }
    ```
 3. Старт нового раунда: [POST] http://localhost:5000/api/games/{gameId}/rounds  
-4. Ход в опред. раунде: [PUT] http://localhost:5000/api/games/{gameId}/rounds/{roundId}  
+4. Ход в опред. раунде: [PUT] http://localhost:5000/api/games/{gameId}/rounds/{roundId}/turn    
    Request:
    ```
    {
@@ -56,6 +64,6 @@
    Response:
    ```
    {
-     "Result": "" // -1/0/1 (-1 - lost; 0 - draw; 1 - won)
+     "Result": "" // 0/1/2/3 (0 - NotReady, 1 - Won, 2 - Draw, 3 - Lost)
    }
    ```
