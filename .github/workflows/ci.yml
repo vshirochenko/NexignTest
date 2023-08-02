@@ -1,10 +1,8 @@
-name: Backend CI
+name: CI
 on:
   push:
     branches:
       - "master"
-    paths:
-      - "src/**"
   workflow_dispatch:
 
 jobs:
@@ -13,9 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DOTNET_VERSION: "7.x"
-    defaults:
-      run:
-        working-directory: ./src
 
     steps:
       - name: Clone source
