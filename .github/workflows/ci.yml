@@ -1,0 +1,36 @@
+name: Backend CI
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "src/**"
+  workflow_dispatch:
+
+jobs:
+  ci:
+    name: "ci"
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: "7.x"
+    defaults:
+      run:
+        working-directory: ./src
+
+    steps:
+      - name: Clone source
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core SDK ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build source
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Test source
+        run: dotnet test --no-restore --verbosity normal
