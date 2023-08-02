@@ -161,7 +161,7 @@ public sealed class Game : IAggregate
     
     private void ThrowIfGameIsOver()
     {
-        if (WinnerId is not null || IsDraw)
+        if (IsOver)
             throw new InvalidOperationException("Game is over :(");
     }
 
