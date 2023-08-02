@@ -160,4 +160,38 @@ public sealed class RoundTests
         // assert
         act.Should().Throw<InvalidOperationException>();
     }
+
+    [Fact]
+    public void Result_should_not_be_ready_if_creator_made_turn_but_opponent_did_not()
+    {
+        // arrange
+        var creatorId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
+        var game = Game.Create(Guid.NewGuid(), creatorId);
+        game.Join(opponentId);
+        game.StartNewRound();
+
+        // act
+        var result = game.MakeTurn(creatorId, TurnKind.Rock);
+
+        // assert
+        result.Should().Be(RoundResult.NotReady);
+    }
+    
+    [Fact]
+    public void Result_should_not_be_ready_if_opponent_made_turn_but_creator_did_not()
+    {
+        // arrange
+        var creatorId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
+        var game = Game.Create(Guid.NewGuid(), creatorId);
+        game.Join(opponentId);
+        game.StartNewRound();
+
+        // act
+        var result = game.MakeTurn(opponentId, TurnKind.Rock);
+
+        // assert
+        result.Should().Be(RoundResult.NotReady);
+    }
 }
