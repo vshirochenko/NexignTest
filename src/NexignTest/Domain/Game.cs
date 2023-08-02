@@ -9,7 +9,7 @@ public sealed class Game : IAggregate
     public Guid? OpponentId { get; private set; }
     public int MaxRoundsCount { get; }
 
-    private List<IDomainEvent> _domainEvents = new();
+    private readonly List<IDomainEvent> _domainEvents = new();
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
     private List<Round> _rounds;
@@ -18,6 +18,8 @@ public sealed class Game : IAggregate
     private int CurrentRoundNumber => Rounds.Count;
 
     public Round? CurrentRound => CurrentRoundNumber >= 1 ? _rounds[^1] : null;
+    
+    public Guid? WinnerId { get; private set; }
 
     private Game(Guid id, Guid creatorId, int maxRoundsCount)
     {
@@ -83,15 +85,8 @@ public sealed class Game : IAggregate
             var result = CurrentRound.MakeCreatorTurn(turn);
             if (IsGameOver())
             {
-                // TODO: fix winner calculation + test
-                var winnerId = result switch
-                {
-                    RoundResult.Won => CreatorId,
-                    RoundResult.Draw => null,
-                    RoundResult.Lost => OpponentId,
-                    _ => throw new InvalidOperationException("Invalid round result")
-                };
-                _domainEvents.Add(new GameIsOverEvent(Id, winnerId));
+                WinnerId = GetGameWinnerId();
+                _domainEvents.Add(new GameIsOverEvent(Id, WinnerId));
             }
 
             return result;
@@ -105,15 +100,8 @@ public sealed class Game : IAggregate
             var result = CurrentRound.MakeOpponentTurn(turn);
             if (IsGameOver())
             {
-                // TODO: fix winner calculation + test
-                var winnerId = result switch
-                {
-                    RoundResult.Won => OpponentId,
-                    RoundResult.Draw => null,
-                    RoundResult.Lost => CreatorId,
-                    _ => throw new InvalidOperationException("Invalid round result")
-                };
-                _domainEvents.Add(new GameIsOverEvent(Id, winnerId));
+                WinnerId = GetGameWinnerId();
+                _domainEvents.Add(new GameIsOverEvent(Id, WinnerId));
             }
 
             return result;
@@ -150,5 +138,17 @@ public sealed class Game : IAggregate
     private bool IsGameOver()
     {
         return IsCurrentRoundLast() && CurrentRound.IsRoundOver();
+    }
+
+    private Guid? GetGameWinnerId()
+    {
+        var creatorWins = _rounds.Count(x => x.Winner == RoundWinner.Creator);
+        var opponentWins = _rounds.Count(x => x.Winner == RoundWinner.Opponent);
+
+        if (creatorWins > opponentWins)
+            return CreatorId;
+        if (creatorWins < opponentWins)
+            return OpponentId;
+        return null;
     }
 }

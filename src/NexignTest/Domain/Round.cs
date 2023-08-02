@@ -8,6 +8,8 @@ public sealed class Round
     public int Number { get; }
     public TurnKind? CreatorTurn { get; private set; }
     public TurnKind? OpponentTurn { get; private set; }
+    
+    public RoundWinner? Winner { get; private set; }
 
     private Round(Guid id, int number)
     {
@@ -37,11 +39,11 @@ public sealed class Round
         if (!HasOpponentMadeTurn()) 
             return RoundResult.NotReady;
         
-        var winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
-        var result = winner switch
+        Winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
+        var result = Winner switch
         {
-            RoundWinner.FirstPlayer => RoundResult.Won,
-            RoundWinner.SecondPlayer => RoundResult.Lost,
+            RoundWinner.Creator => RoundResult.Won,
+            RoundWinner.Opponent => RoundResult.Lost,
             RoundWinner.Draw => RoundResult.Draw,
             _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
         };
@@ -56,11 +58,11 @@ public sealed class Round
         if (!HasCreatorMadeTurn()) 
             return RoundResult.NotReady;
         
-        var winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
-        var result = winner switch
+        Winner = RoundJudgement.GetWinner(CreatorTurn.Value, OpponentTurn.Value);
+        var result = Winner switch
         {
-            RoundWinner.FirstPlayer => RoundResult.Lost,
-            RoundWinner.SecondPlayer => RoundResult.Won,
+            RoundWinner.Creator => RoundResult.Lost,
+            RoundWinner.Opponent => RoundResult.Won,
             RoundWinner.Draw => RoundResult.Draw,
             _ => throw new ArgumentOutOfRangeException("Unrecognized round winner", (Exception?) null)
         };

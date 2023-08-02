@@ -10,11 +10,11 @@ public enum RoundWinner
     /// </summary>
     Draw = 0,
     /// <summary>
-    /// Первый игрок
+    /// Создатель игры
     /// </summary>
-    FirstPlayer = 1,
+    Creator = 1,
     /// <summary>
-    /// Второй игрок
+    /// Оппонент
     /// </summary>
-    SecondPlayer = 2
+    Opponent = 2
 }

@@ -8,47 +8,47 @@ public sealed class TurnsTests
 {
     [Theory]
     [InlineData(TurnKind.Rock, RoundWinner.Draw)]
-    [InlineData(TurnKind.Scissors, RoundWinner.FirstPlayer)]
-    [InlineData(TurnKind.Paper, RoundWinner.SecondPlayer)]
-    public void Rock_turn_against_other_turns_should_produce_correct_result(TurnKind secondPlayerTurn, RoundWinner expectedWinner)
+    [InlineData(TurnKind.Scissors, RoundWinner.Creator)]
+    [InlineData(TurnKind.Paper, RoundWinner.Opponent)]
+    public void Rock_turn_against_other_turns_should_produce_correct_result(TurnKind opponentTurn, RoundWinner expectedWinner)
     {
         // arrange
-        var firstPlayerTurn = TurnKind.Rock;
+        var creatorTurn = TurnKind.Rock;
 
         // act
-        var actualWinner = RoundJudgement.GetWinner(firstPlayerTurn, secondPlayerTurn);
+        var actualWinner = RoundJudgement.GetWinner(creatorTurn, opponentTurn);
 
         // assert
         actualWinner.Should().Be(expectedWinner);
     }
     
     [Theory]
-    [InlineData(TurnKind.Rock, RoundWinner.SecondPlayer)]
+    [InlineData(TurnKind.Rock, RoundWinner.Opponent)]
     [InlineData(TurnKind.Scissors, RoundWinner.Draw)]
-    [InlineData(TurnKind.Paper, RoundWinner.FirstPlayer)]
-    public void Scissors_turn_against_other_turns_should_produce_correct_result(TurnKind secondPlayerTurn, RoundWinner expectedWinner)
+    [InlineData(TurnKind.Paper, RoundWinner.Creator)]
+    public void Scissors_turn_against_other_turns_should_produce_correct_result(TurnKind opponentTurn, RoundWinner expectedWinner)
     {
         // arrange
-        var firstPlayerTurn = TurnKind.Scissors;
+        var creatorTurn = TurnKind.Scissors;
 
         // act
-        var actualWinner = RoundJudgement.GetWinner(firstPlayerTurn, secondPlayerTurn);
+        var actualWinner = RoundJudgement.GetWinner(creatorTurn, opponentTurn);
 
         // assert
         actualWinner.Should().Be(expectedWinner);
     }
     
     [Theory]
-    [InlineData(TurnKind.Rock, RoundWinner.FirstPlayer)]
-    [InlineData(TurnKind.Scissors, RoundWinner.SecondPlayer)]
+    [InlineData(TurnKind.Rock, RoundWinner.Creator)]
+    [InlineData(TurnKind.Scissors, RoundWinner.Opponent)]
     [InlineData(TurnKind.Paper, RoundWinner.Draw)]
-    public void Paper_turn_against_other_turns_should_produce_correct_result(TurnKind secondPlayerTurn, RoundWinner expectedWinner)
+    public void Paper_turn_against_other_turns_should_produce_correct_result(TurnKind opponentTurn, RoundWinner expectedWinner)
     {
         // arrange
-        var firstPlayerTurn = TurnKind.Paper;
+        var creatorTurn = TurnKind.Paper;
 
         // act
-        var actualWinner = RoundJudgement.GetWinner(firstPlayerTurn, secondPlayerTurn);
+        var actualWinner = RoundJudgement.GetWinner(creatorTurn, opponentTurn);
 
         // assert
         actualWinner.Should().Be(expectedWinner);

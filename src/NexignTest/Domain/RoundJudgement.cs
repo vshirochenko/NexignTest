@@ -7,17 +7,17 @@ public static class RoundJudgement
         {
             // Первый игрок показывает "камень"
             (TurnKind.Rock, TurnKind.Rock) => RoundWinner.Draw,
-            (TurnKind.Rock, TurnKind.Scissors) => RoundWinner.FirstPlayer,
-            (TurnKind.Rock, TurnKind.Paper) => RoundWinner.SecondPlayer,
+            (TurnKind.Rock, TurnKind.Scissors) => RoundWinner.Creator,
+            (TurnKind.Rock, TurnKind.Paper) => RoundWinner.Opponent,
 
             // Первый игрок показывает "ножницы"
-            (TurnKind.Scissors, TurnKind.Rock) => RoundWinner.SecondPlayer,
+            (TurnKind.Scissors, TurnKind.Rock) => RoundWinner.Opponent,
             (TurnKind.Scissors, TurnKind.Scissors) => RoundWinner.Draw,
-            (TurnKind.Scissors, TurnKind.Paper) => RoundWinner.FirstPlayer,
+            (TurnKind.Scissors, TurnKind.Paper) => RoundWinner.Creator,
 
             // Первый игрок показывает "бумагу"
-            (TurnKind.Paper, TurnKind.Rock) => RoundWinner.FirstPlayer,
-            (TurnKind.Paper, TurnKind.Scissors) => RoundWinner.SecondPlayer,
+            (TurnKind.Paper, TurnKind.Rock) => RoundWinner.Creator,
+            (TurnKind.Paper, TurnKind.Scissors) => RoundWinner.Opponent,
             (TurnKind.Paper, TurnKind.Paper) => RoundWinner.Draw,
 
             (_, _) => throw new ArgumentOutOfRangeException("Unrecognized move kind", (Exception?) null)
