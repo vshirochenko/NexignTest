@@ -27,7 +27,8 @@ internal sealed class GameRepository : IGameRepository
             dbGame.CreatorId, 
             dbGame.MaxRoundsCount,
             dbGame.OpponentId, 
-            dbGame.Rounds.Select(x => Round.Load(x.Id, x.Number, (TurnKind?) x.CreatorTurn, (TurnKind?) x.OpponentTurn)).OrderBy(x => x.Number).ToList());
+            dbGame.Rounds.Select(x => Round.Load(x.Id, x.Number, (TurnKind?) x.CreatorTurn, (TurnKind?) x.OpponentTurn)).OrderBy(x => x.Number).ToList(),
+            dbGame.WinnerId);
         return game;
     }
 
@@ -41,6 +42,7 @@ internal sealed class GameRepository : IGameRepository
         else
         {
             dbGame.OpponentId = game.OpponentId;
+            dbGame.WinnerId = game.WinnerId;
             
             foreach (var round in game.Rounds)
             {
@@ -65,6 +67,12 @@ internal sealed class GameRepository : IGameRepository
                 }
             }
         }
+
+        foreach (var @event in game.DomainEvents)
+        {
+            // TODO: notify clients about some events (for example, GameOver)...
+        }
+        
         await _db.SaveChangesAsync(stoppingToken);
     }
 }

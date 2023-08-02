@@ -10,6 +10,8 @@ internal sealed class DbGame
     public Guid? OpponentId { get; set; }
     public DbPlayer? Opponent { get; set; }
     
+    public Guid? WinnerId { get; set; }
+    
     public List<DbRound> Rounds { get; } = new();
 
     public DbGame(Guid id, Guid creatorId, int maxRoundsCount)

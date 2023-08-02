@@ -9,6 +9,7 @@ public sealed class Game : IAggregate
     public Guid? OpponentId { get; private set; }
     public int MaxRoundsCount { get; }
 
+    // Need to handle these events later :)
     private readonly List<IDomainEvent> _domainEvents = new();
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
@@ -37,12 +38,13 @@ public sealed class Game : IAggregate
         return new Game(id, creatorId, maxRoundsCount);
     }
 
-    public static Game Load(Guid id, Guid creatorId, int maxRoundsCount, Guid? opponentId, List<Round> rounds)
+    public static Game Load(Guid id, Guid creatorId, int maxRoundsCount, Guid? opponentId, List<Round> rounds, Guid? winnerId)
     {
         var game = new Game(id, creatorId, maxRoundsCount)
         {
             OpponentId = opponentId,
-            _rounds = rounds
+            _rounds = rounds,
+            WinnerId = winnerId
         };
         return game;
     }
